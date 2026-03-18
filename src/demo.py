@@ -1,210 +1,277 @@
 from model import Competition
-import validate
 
-print("1 сценарий работы")
+def demo_validation():
+    """Сценарий 1: базовая валидация."""
+    print("=== Сценарий 1: Валидация данных ===")
     
-    # Создание объекта
-print("\n1. Создание объекта Competition:")
-comp = Competition(
-        name="Олимпиада",
-        sport_type="Биатлон",
-        location="Сочи",
-        start_date="2014-06-01",
-        end_date="2014-06-30",
-        max_participants=32
-    )
-print(comp)
-    
-print("\n2. Добавление участников:")
-comp._participants.append("Сборная России")
-comp._participants.append("Сборная Аргентины")
-comp._participants.append("Сборная Германии")
-print(f"   Участники: {comp.participants}")
-print(f"   Количество: {comp.participants_count}")
-    
-print("\n3. Бизнес-метод (get_participants_list):")
-print(comp.get_participants_list())
-    
-print("\n4. Сравнение объектов (__eq__):")
-comp2 = Competition(
-        name="Чемпионат Европы",
-        sport_type="Биатлон",
-        location="Минск",
-        start_date="2015-07-01",
-        end_date="2015-07-15",
-        max_participants=16
-    )
-print(f"   comp == comp2: {comp == comp2}")
-print(f"   comp == comp: {comp == comp}")
-    
-    # СЦЕНАРИЙ 2: ДЕМОНСТРАЦИЯ ВАЛИДАЦИИ
-print("\n" + "-" * 40)
-print("▶ СЦЕНАРИЙ 2: Демонстрация валидации")
-print("-" * 40)
-    
-    print("\n1. Ошибка: пустое название")
     try:
-        comp_invalid = Competition(
-            name="",
-            sport_type="Волейбол",
-            location="Москва",
-            start_date="2016-08-01",
-            end_date="2016-08-10",
-            max_participants=10
-        )
-    except (ValueError, TypeError) as e:
-        print(f"   → {e}")
+        comp = Competition("", "волейбол", "Москва", "2015-05-03", "2015-05-10", 16)
+    except ValueError as e:
+        print(f"Ошибка при создании (пустое название): {e}")
     
-    print("\n2. Ошибка: дата окончания раньше даты начала")
     try:
-        comp_invalid = Competition(
-            name="Матч между командами Казани и Волгограда",
-            sport_type="баскетбол",
-            location="Казань",
-            start_date="2017-09-10",
-            end_date="2017-09-01",
-            max_participants=10
-        )
-    except (ValueError, TypeError) as e:
-        print(f"   → {e}")
+        comp = Competition("Турнир", "шахматы123", "Сочи", "2014-06-01", "2014-06-10", 10)
+    except ValueError as e:
+        print(f"Ошибка при создании (цифры в виде спорта): {e}")
     
-    print("\n3. Ошибка: отрицательное количество участников")
     try:
-        comp_invalid = Competition(
-            name="Турнир",
-            sport_type="волейбол",
-            location="Сочи",
-            start_date="2024-10-01",
-            end_date="2024-10-05",
-            max_participants=-5
-        )
-    except (ValueError, TypeError) as e:
-        print(f"   → {e}")
+        comp = Competition("Соревнования", "футбол", "Волгоград", "2017-05-23", "2017-05-27", -5)
+    except ValueError as e:
+        print(f"Ошибка при создании (отрицательные участники): {e}")
     
-    # =========================================================
-    # СЦЕНАРИЙ 3: ИЗМЕНЕНИЕ СОСТОЯНИЯ И ЛОГИЧЕСКИЕ ОГРАНИЧЕНИЯ
-    # =========================================================
-    print("\n" + "-" * 40)
-    print("▶ СЦЕНАРИЙ 3: Изменение состояния и логические ограничения")
-    print("-" * 40)
+
+    comp = Competition("Чемпионат", "футбол", "Москва", "2018-06-01", "2018-06-10", 20)
+    print(f"Создано соревнование: {comp}")
     
-    # Создаем новое соревнование
-    comp3 = Competition(
-        name="Теннисный турнир",
-        sport_type="теннис",
-        location="Корт 1",
-        start_date="2024-07-01",
-        end_date="2024-07-03",
-        max_participants=4
-    )
+    # Ошибка при изменении через сеттер
+    try:
+        comp.location = ""
+    except ValueError as e:
+        print(f"Ошибка при изменении локации: {e}")
+    print()
+
+def demo_state_changes():
+    """Сценарий 2: логическое состояние (статусы)."""
+    print("=== Сценарий 2: Логическое состояние (статусы) ===")
     
-    print("\n1. Начальное состояние:")
-    print(f"   Статус: {comp3.status}")
-    print(f"   Участников: {comp3.participants_count}")
+    comp = Competition("Турнир", "теннис", "Сочи", "2024-09-01", "2024-09-05", 8)
+    print(f"Начальное состояние: {comp}")
     
-    # Пытаемся изменить статус без участников
-    print("\n2. Попытка начать соревнование без участников:")
-    result = comp3.next_status()
-    print(f"   → {result}")
-    print(f"   Статус остался: {comp3.status}")
+    # Пытаемся начать без участников
+    print(f"\nПопытка начать без участников:")
+    result = comp.next_status()
+    print(f"Результат: {result}")
     
     # Добавляем участников
-    print("\n3. Добавляем участников:")
-    comp3._participants.append("Игрок 1")
-    comp3._participants.append("Игрок 2")
-    print(f"   Теперь участников: {comp3.participants_count}")
+    comp._participants.extend(["Игрок1", "Игрок2", "Игрок3", "Игрок4"])
+    print(f"\nДобавлено 4 участника")
     
     # Начинаем соревнование
-    print("\n4. Начинаем соревнование (Registration → In Progress):")
-    result = comp3.next_status()
-    print(f"   → {result}")
-    print(f"   Новый статус: {comp3.status}")
+    print(f"\nЗапуск соревнования:")
+    result = comp.next_status()
+    print(f"Результат: {result}")
+    print(f"Новый статус: {comp.status}")
     
-    # Пытаемся добавить участника после начала (логическое ограничение)
-    print("\n5. Попытка добавить участника после начала соревнования:")
-    if comp3.status != "Registration":
-        print(f"   → Нельзя добавить участника в статусе '{comp3.status}'")
+    # Завершаем
+    print(f"\nЗавершение соревнования:")
+    result = comp.next_status()
+    print(f"Результат: {result}")
+    print(f"Итоговый статус: {comp.status}")
     
-    # Завершаем соревнование
-    print("\n6. Завершаем соревнование (In Progress → Completed):")
-    result = comp3.next_status()
-    print(f"   → {result}")
-    print(f"   Новый статус: {comp3.status}")
-    
-    # Пытаемся завершить еще раз
-    print("\n7. Попытка завершить уже завершенное соревнование:")
-    result = comp3.next_status()
-    print(f"   → {result}")
-    
-    # =========================================================
-    # СЦЕНАРИЙ 4: РАБОТА С РАЗНЫМИ СТАТУСАМИ
-    # =========================================================
-    print("\n" + "-" * 40)
-    print("▶ СЦЕНАРИЙ 4: Работа с разными статусами")
-    print("-" * 40)
-    
-    # Создаем несколько соревнований в разных статусах
-    print("\n1. Создаем соревнования в разных статусах:")
-    
-    reg_comp = Competition(
-        name="Турнир А",
-        sport_type="шахматы",
-        location="Зал 1",
-        start_date="2024-11-01",
-        end_date="2024-11-03",
-        max_participants=8
-    )
-    print(f"   • {reg_comp.name} - статус: {reg_comp.status}")
-    
-    prog_comp = Competition(
-        name="Турнир Б",
-        sport_type="шахматы",
-        location="Зал 2",
-        start_date="2024-11-05",
-        end_date="2024-11-07",
-        max_participants=8
-    )
-    prog_comp._status = "In Progress"
-    print(f"   • {prog_comp.name} - статус: {prog_comp.status}")
-    
-    comp_comp = Competition(
-        name="Турнир В",
-        sport_type="шахматы",
-        location="Зал 3",
-        start_date="2024-11-10",
-        end_date="2024-11-12",
-        max_participants=8
-    )
-    comp_comp._status = "Completed"
-    print(f"   • {comp_comp.name} - статус: {comp_comp.status}")
-    
-    # Показываем, как один метод по-разному работает
-    print("\n2. Один метод next_status() работает по-разному:")
-    
-    print(f"\n   Для Registration ({reg_comp.status}):")
-    print(f"   {reg_comp.next_status()}")
-    
-    print(f"\n   Для In Progress ({prog_comp.status}):")
-    print(f"   {prog_comp.next_status()}")
-    
-    print(f"\n   Для Completed ({comp_comp.status}):")
-    print(f"   {comp_comp.next_status()}")
-    
-    # =========================================================
-    # ИТОГ
-    # =========================================================
-    print_separator("ИТОГ")
-    print("✅ Демонстрация работы класса Competition выполнена!")
-    print("\n   Реализовано:")
-    print("   • 4 закрытых атрибута (name, sport_type, location, max_participants)")
-    print("   • Конструктор с валидацией")
-    print("   • Свойства @property")
-    print("   • Магические методы: __str__, __repr__, __eq__")
-    print("   • 2 бизнес-метода")
-    print("   • Метод изменения состояния (next_status)")
-    print("   • Поведение, зависящее от статуса")
-    print(f"\n📊 Всего создано соревнований: {Competition.competition_count}")
+    # Пытаемся изменить завершенное
+    print(f"\nПопытка изменить завершенное соревнование:")
+    result = comp.next_status()
+    print(f"Результат: {result}")
+    print()
 
+def demo_equality():
+    """Сценарий 3: сравнение объектов."""
+    print("=== Сценарий 3: Сравнение и независимость ===")
+    
+    comp1 = Competition("Кубок", "баскетбол", "Саратов", "2020-06-01", "2020-06-10", 16)
+    comp2 = Competition("Кубок", "баскетбол", "Саратов", "2020-06-01", "2020-06-10", 16)
+    comp3 = Competition("Чемпионат", "хоккей", "Казань", "2020-12-01", "2020-12-10", 8)
+    
+    print(f"comp1: {repr(comp1)}")
+    print(f"comp2: {repr(comp2)}")
+    print(f"comp3: {repr(comp3)}")
+    print(f"comp1 == comp2 ? {comp1 == comp2} (разные ID)")
+    print(f"comp1 == comp3 ? {comp1 == comp3}")
+    
+    # Добавляем участников в comp2
+    comp2._participants.append("Участник")
+    print(f"\nПосле добавления участника в comp2:")
+    print(f"comp1 участников: {comp1.participants_count}")
+    print(f"comp2 участников: {comp2.participants_count}")
+    print(f"comp1 == comp2 ? {comp1 == comp2} (всё ещё разные ID)")
+    print()
+
+def demo_class_attribute():
+    """Сценарий 4: атрибуты класса."""
+    print("=== Сценарий 4: Атрибуты класса ===")
+    
+    # Доступ через класс
+    print(f"Competition.sport_federation = {Competition.sport_federation}")
+    print(f"Competition.competition_count = {Competition.competition_count}")
+    
+    # Создаём экземпляры
+    comp1 = Competition("Турнир1", "бокс", "Москва", "2025-07-01", "2025-07-10", 16)
+    comp2 = Competition("Турнир2", "теннис", "Сочи", "2024-07-01", "2024-07-05", 8)
+    
+    print(f"\nСоздано два соревнования:")
+    print(f"comp1 ID: {comp1.competition_id}")
+    print(f"comp2 ID: {comp2.competition_id}")
+    
+    # Доступ через экземпляр
+    print(f"\nЧерез экземпляр comp1: comp1.sport_federation = {comp1.sport_federation}")
+    print(f"Через экземпляр comp2: comp2.sport_federation = {comp2.sport_federation}")
+    
+    # Изменение атрибута класса
+    print(f"\nИзменение атрибута класса:")
+    Competition.sport_federation = "Новая федерация"
+    print(f"comp1.sport_federation = {comp1.sport_federation}")
+    print(f"comp2.sport_federation = {comp2.sport_federation}")
+    print(f"Теперь Competition.competition_count = {Competition.competition_count}")
+    print()
+
+def demo_multiple_states():
+    """Сценарий 5: множественные состояния."""
+    print("=== Сценарий 5: Множественные состояния ===")
+    
+    comp = Competition("Чемпионат", "баскетбол", "Краснодар", "2024-10-01", "2024-10-07", 8)
+    print(f"Исходное соревнование:\n{comp}")
+    
+    # Состояние 1: Регистрация (мало участников)
+    print(f"\n▶ Состояние: {comp.status}")
+    print(f"Участников: {comp.participants_count}, нужно минимум: {comp.min_participants}")
+    
+    # Пытаемся начать
+    result = comp.next_status()
+    print(f"Попытка начать: {result}")
+    
+    # Состояние 2: Добавляем участников
+    print(f"\n▶ Добавляем участников...")
+    comp._participants.extend(["Игрок1", "Игрок2", "Игрок3", "Игрок4"])
+    print(f"Теперь участников: {comp.participants_count}")
+    
+    # Начинаем
+    result = comp.next_status()
+    print(f"Запуск: {result}")
+    print(f"Новый статус: {comp.status}")
+    
+    # Состояние 3: В процессе
+    print(f"\n▶ Состояние: {comp.status}")
+    print(f"Участники: {comp.participants}")
+    
+    # Завершаем
+    result = comp.next_status()
+    print(f"Завершение: {result}")
+    print(f"Новый статус: {comp.status}")
+    
+    # Состояние 4: Завершено
+    print(f"\n▶ Состояние: {comp.status}")
+    print(f"Пытаемся изменить статус завершенного соревнования:")
+    result = comp.next_status()
+    print(f"Результат: {result}")
+    
+    # Состояние 5: Проверка валидации перехода
+    print(f"\n▶ Проверка недопустимого перехода:")
+    try:
+        from validate import validate_status_transition
+        validate_status_transition("Completed", "Registration")
+    except ValueError as e:
+        print(f"Ошибка: {e}")
+    print()
+
+def demo_date_operations():
+    """Сценарий 6: работа с датами."""
+    print("=== Сценарий 6: Работа с датами ===")
+    
+    # Создание короткого соревнования
+    comp_short = Competition(
+        name="Спринт",
+        sport_type="бег",
+        location="Москва",
+        start_date="2024-05-01",
+        end_date="2024-05-03",
+        max_participants=10
+    )
+    print(f"\nКороткое соревнование:")
+    print(f"  Название: {comp_short.name}")
+    print(f"  Даты: {comp_short.start_date} - {comp_short.end_date}")
+    print(f"  Длительность: {comp_short.get_competition_duration()} дней")
+    
+    # Создание длинного соревнования
+    comp_long = Competition(
+        name="Марафон",
+        sport_type="бег",
+        location="Москва",
+        start_date="2024-06-01",
+        end_date="2024-06-30",
+        max_participants=50
+    )
+    print(f"\nДлинное соревнование:")
+    print(f"  Название: {comp_long.name}")
+    print(f"  Даты: {comp_long.start_date} - {comp_long.end_date}")
+    print(f"  Длительность: {comp_long.get_competition_duration()} дней")
+    
+    # Сравнение длительностей
+    print(f"\n▶ Сравнение длительностей:")
+    print(f"  {comp_short.name} короче чем {comp_long.name}?")
+    print(f"  {comp_short.get_competition_duration()} < {comp_long.get_competition_duration()} → {comp_short.get_competition_duration() < comp_long.get_competition_duration()}")
+    print()
+
+def demo_magic_methods():
+    """Сценарий 7: магические методы."""
+    print("=== Сценарий 7: Магические методы ===")
+    
+    # __str__ - пользовательский вывод
+    print("\n▶ __str__ (для пользователей):")
+    comp = Competition(
+        name="Чемпионат мира",
+        sport_type="футбол",
+        location="Москва",
+        start_date="2024-06-01",
+        end_date="2024-06-30",
+        max_participants=32
+    )
+    comp._participants.extend(["Россия", "Бразилия", "Германия", "Аргентина"])
+    print(comp)
+    
+    # __repr__ - отладочный вывод
+    print("\n▶ __repr__ (для разработчиков):")
+    print(repr(comp))
+    
+    # __eq__ - сравнение по ID
+    print("\n▶ __eq__ (сравнение по ID):")
+    comp_same = Competition(
+        name="Чемпионат мира",
+        sport_type="футбол",
+        location="Москва",
+        start_date="2024-06-01",
+        end_date="2024-06-30",
+        max_participants=32
+    )
+    comp_diff = Competition(
+        name="Кубок",
+        sport_type="хоккей",
+        location="Казань",
+        start_date="2024-12-01",
+        end_date="2024-12-10",
+        max_participants=8
+    )
+    print(f"  comp == comp_same: {comp == comp_same} (разные ID: {comp.competition_id} vs {comp_same.competition_id})")
+    print(f"  comp == comp_diff: {comp == comp_diff}")
+    print(f"  comp == comp: {comp == comp} (одинаковый ID)")
+    
+    # Сравнение по длительности (аналог lt)
+    print("\n▶ Сравнение по длительности:")
+    comp_short = Competition("Спринт", "бег", "Москва", "2024-05-01", "2024-05-03", 10)
+    comp_long = Competition("Марафон", "бег", "Москва", "2024-06-01", "2024-06-30", 50)
+    
+    print(f"  {comp_short.name}: {comp_short.get_competition_duration()} дней")
+    print(f"  {comp_long.name}: {comp_long.get_competition_duration()} дней")
+    print(f"  {comp_short.name} < {comp_long.name}? {comp_short.get_competition_duration() < comp_long.get_competition_duration()}")
+    print(f"  {comp_long.name} < {comp_short.name}? {comp_long.get_competition_duration() < comp_short.get_competition_duration()}")
+    
+    # Сортировка списка соревнований по длительности
+    print("\n▶ Сортировка соревнований по длительности:")
+    competitions = [comp_long, comp_short, comp]
+    print("  До сортировки:")
+    for c in competitions:
+        print(f"    {c.name}: {c.get_competition_duration()} дней")
+    
+    competitions.sort(key=lambda x: x.get_competition_duration())
+    print("  После сортировки (по возрастанию длительности):")
+    for c in competitions:
+        print(f"    {c.name}: {c.get_competition_duration()} дней")
+    print()
 
 if __name__ == "__main__":
-    main()
+    demo_validation()
+    demo_state_changes()
+    demo_equality()
+    demo_class_attribute()
+    demo_multiple_states()
+    demo_date_operations()
+    demo_magic_methods()
