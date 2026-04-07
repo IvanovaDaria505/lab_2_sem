@@ -1,3 +1,3 @@
 # Лабараторные работы по ООП
-Лабараторная работа №1: [text](src/laba_01/README.md)
-Лабараторная работа №2: [text](src/laba_02/README.md)
+Lab01: [Лабараторная работа №1](src/laba_01/README.md)
+Lab02: [Лабараторная работа №2](src/laba_02/README.md)
