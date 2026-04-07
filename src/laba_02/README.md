@@ -84,8 +84,7 @@ CompetitionCollection — это контейнерный класс для уп
 - Повторный вывод коллекции
  
 
-![alt text](../../images/lab_02/imanges2_01.png)
-
+![alt text](../../images/lab_02/imanges02_01.png)
 
 ### Сценарий 2: Поиск и фильтрация
 - Поиск по названию (find_by_name)

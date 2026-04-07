@@ -97,13 +97,13 @@ def scenario_1_basic_operations():
         )
         collection.add(duplicate)
     except ValueError as e:
-        print(f"   Ошибка (корректно): {e}")
+        print(f"   Ошибка: {e}")
     
     print("\n4. Проверка на добавление объекта неправильного типа:")
     try:
         collection.add("Это строка, а не Competition")
     except TypeError as e:
-        print(f"   Ошибка (корректно): {e}")
+        print(f"   Ошибка: {e}")
     
     print(f"\n5. Удаление соревнования: {competitions[0].name}")
     collection.remove(competitions[0])
