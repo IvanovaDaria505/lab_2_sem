@@ -1,1 +1,0 @@
-[Лабораторная работа №1](https://github.com/IvanovaDaria505/lab_2_sem/tree/main/src/laba_01)
