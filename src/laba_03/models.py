@@ -1,4 +1,3 @@
-# src/lab03/models.py
 from base import Competition
 from datetime import datetime
 
