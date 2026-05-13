@@ -1,4 +1,4 @@
-from base import Competition
+from laba_03.base import Competition
 from datetime import datetime
 
 class TeamCompetition(Competition):
