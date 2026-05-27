@@ -1,0 +1,19 @@
+[
+  {
+    "type": "TeamCompetition",
+    "name": "Гран При",
+    "sport_type": "Парное фигруное катание",
+    "location": "Москва",
+    "start_date": "2023-02-9",
+    "end_date": "2023-02-18",
+    "max_participants": 28,
+    "status": "Registration",
+    "competition_id": "COMP-002",
+    "min_teams": 2,
+    "team_size": 6,
+    "registered_teams": [
+      "Команда А",
+      "Команда Б"
+    ]
+  }
+]
