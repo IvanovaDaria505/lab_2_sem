@@ -1,13 +1,18 @@
+<<<<<<< HEAD
 from __future__ import annotations
 
 from typing import Optional, Callable, Union, Any
 
+=======
+from typing import Optional, Callable, Union
+>>>>>>> 56c5be453300fdab25baf3f17a4a50e6a414f8ce
 from .models import Competition, TeamCompetition, IndividualCompetition
 from .app import Application
 from .exceptions import AppError, ItemNotFoundError, DuplicateItemError
 
 
 class CLI:
+<<<<<<< HEAD
 
     def __init__(self, app: Application) -> None:
         self._app: Application = app
@@ -27,6 +32,12 @@ class CLI:
             6: self._sort_menu
         }
 
+=======
+    def __init__(self, app: Application):
+        self.app = app
+
+    def run(self) -> None:
+>>>>>>> 56c5be453300fdab25baf3f17a4a50e6a414f8ce
         while True:
             self._print_menu()
 
@@ -424,6 +435,7 @@ class CLI:
 
             return raw_value
 
+<<<<<<< HEAD
     def _read_bool(self, prompt: str) -> bool:
         while True:
             raw_value = input(prompt).strip().lower()
@@ -435,3 +447,38 @@ class CLI:
                 return False
 
             print("Ошибка: введите y/n или да/нет.")
+=======
+    def _sort_competitions(self) -> None:
+        """Подменю сортировки с выбором стратегии."""
+        print("\n--- СОРТИРОВКА ---")
+        print("Сортировать по:")
+        print("1. Названию")
+        print("2. Дате начала")
+        print("3. Количеству участников")
+        print("4. Длительности")
+        choice = input("Выберите стратегию: ")
+        
+        key_func: Callable[[Competition], Union[str, int, float]]
+        if choice == '1':
+            key_func = lambda c: c.name
+            desc = "названию"
+        elif choice == '2':
+            key_func = lambda c: c.start_date
+            desc = "дате начала"
+        elif choice == '3':
+            key_func = lambda c: c.max_participants
+            desc = "участникам"
+        elif choice == '4':
+            key_func = lambda c: c.get_competition_duration()
+            desc = "длительности"
+        else:
+            print("Неверный выбор.")
+            return
+        
+        reverse = input("Сортировать по убыванию? (y/n): ").lower() == 'y'
+        sorted_items = self.app.sort_items(key=key_func, reverse=reverse)
+        
+        print(f"\nСортировка по {desc}:")
+        for comp in sorted_items:
+            print(f"  - {comp.name} ({key_func(comp)})")
+>>>>>>> 56c5be453300fdab25baf3f17a4a50e6a414f8ce
