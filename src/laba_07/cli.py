@@ -1,23 +1,13 @@
-"""
-Слой интерфейса командной строки (CLI).
-Отвечает только за ввод/вывод, не содержит бизнес-логики.
-Все функции аннотированы типами (ЛР-7).
-"""
-
 from typing import Optional, Callable, Union
 from .models import Competition, TeamCompetition, IndividualCompetition
 from .app import Application
 from .exceptions import AppError, ItemNotFoundError, DuplicateItemError
 
 class CLI:
-    """
-    Основной класс командного интерфейса.
-    """
     def __init__(self, app: Application):
         self.app = app
 
     def run(self) -> None:
-        """Запускает главный цикл меню."""
         while True:
             self._show_menu()
             try:
