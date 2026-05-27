@@ -103,3 +103,9 @@ text
 ### Сценарий 6: Фильтрация
 
 ![alt text](../../images/lab_07/imanges7_06.png)
+
+
+### Дополнительное задание:
+
+
+[![asciinema](https://asciinema.org/a/v2Kh5cCkZutcS11w.svg)](https://asciinema.org/a/v2Kh5cCkZutcS11w)

@@ -1,37 +1,24 @@
-"""
-Модели данных предметной области «Соревнования».
-Объединяет классы из ЛР-3 (наследование) и ЛР-4 (интерфейсы).
-Добавлены методы to_dict()/from_dict() для сохранения в JSON (ЛР-7).
-"""
-
 from datetime import datetime
 from abc import ABC, abstractmethod
 from typing import Any, List
 
 
 class Printable(ABC):
-    """Интерфейс для объектов, которые можно представить в виде строки."""
     @abstractmethod
     def to_string(self) -> str:
         pass
 
 class Comparable(ABC):
-    """Интерфейс для сравнения объектов."""
     @abstractmethod
     def compare_to(self, other: Any) -> int:
         pass
 
 class Competition:
-    """
-    Базовый класс для всех соревнований.
-    Атрибуты класса, валидация, свойства и бизнес-методы из ЛР-1 и ЛР-2.
-    """
     sport_federation = "International Sports Federation (ISF)"
     competition_count = 0
     
     def __init__(self, name: str, sport_type: str, location: str, 
                  start_date: str, end_date: str, max_participants: int):
-        # Простейшая валидация внутри класса для автономности
         if not name.strip(): raise ValueError("Название не может быть пустым")
         self._name = name.strip()
         self._sport_type = sport_type
@@ -47,7 +34,6 @@ class Competition:
         Competition.competition_count += 1
         self._competition_id = f"COMP-{Competition.competition_count:03d}"
     
-    # --- Свойства ---
     @property
     def name(self) -> str: return self._name
     @property
@@ -69,15 +55,12 @@ class Competition:
     @property
     def participants_count(self) -> int: return len(self._participants)
 
-    # --- Бизнес-методы ---
     def get_competition_duration(self) -> int:
-        """Вычисляет длительность соревнования в днях."""
         start = datetime.strptime(self._start_date, "%Y-%m-%d")
         end = datetime.strptime(self._end_date, "%Y-%m-%d")
         return (end - start).days
 
     def next_status(self) -> str:
-        """Переключает статус соревнования."""
         if self._status == "Registration":
             if len(self._participants) < self._min_participants:
                 return f"Ошибка: нужно минимум {self._min_participants} участника!"
@@ -91,10 +74,8 @@ class Competition:
         return "Ошибка: неизвестный статус"
 
     def calculate_organizer_fee(self) -> float:
-        """Базовая стоимость организационного взноса."""
         return 0.0
 
-    # --- Магические методы ---
     def __str__(self):
         start = datetime.strptime(self._start_date, "%Y-%m-%d").strftime("%d.%m.%Y")
         end = datetime.strptime(self._end_date, "%Y-%m-%d").strftime("%d.%m.%Y")
@@ -109,9 +90,7 @@ class Competition:
             return False
         return self._competition_id == other._competition_id
 
-    # --- Методы для сериализации (ЛР-7) ---
     def to_dict(self) -> dict:
-        """Сериализует объект в словарь для сохранения в JSON."""
         return {
             "type": self.__class__.__name__,
             "name": self._name,
@@ -126,12 +105,10 @@ class Competition:
 
     @classmethod
     def from_dict(cls, data: dict) -> 'Competition':
-        """Создает объект из словаря (десериализация)."""
         raise NotImplementedError("Этот метод должен быть переопределен в дочерних классах")
 
 
 class TeamCompetition(Competition, Printable, Comparable):
-    """Класс для командных соревнований (из ЛР-3 и ЛР-4)."""
     def __init__(self, name: str, sport_type: str, location: str, 
                  start_date: str, end_date: str, max_participants: int,
                  min_teams: int, team_size: int):
@@ -178,7 +155,6 @@ class TeamCompetition(Competition, Printable, Comparable):
         return comp
 
 class IndividualCompetition(Competition, Printable, Comparable):
-    """Класс для индивидуальных соревнований (из ЛР-3 и ЛР-4)."""
     def __init__(self, name: str, sport_type: str, location: str, 
                  start_date: str, end_date: str, max_participants: int,
                  category: str, prize_fund: float):

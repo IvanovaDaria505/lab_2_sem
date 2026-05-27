@@ -1,23 +1,13 @@
-"""
-Слой интерфейса командной строки (CLI).
-Отвечает только за ввод/вывод, не содержит бизнес-логики.
-Все функции аннотированы типами (ЛР-7).
-"""
-
 from typing import Optional, Callable, Union
 from .models import Competition, TeamCompetition, IndividualCompetition
 from .app import Application
 from .exceptions import AppError, ItemNotFoundError, DuplicateItemError
 
 class CLI:
-    """
-    Основной класс командного интерфейса.
-    """
     def __init__(self, app: Application):
         self.app = app
 
     def run(self) -> None:
-        """Запускает главный цикл меню."""
         while True:
             self._show_menu()
             try:
@@ -47,7 +37,6 @@ class CLI:
                 print("Неверный пункт меню. Попробуйте снова.")
 
     def _show_menu(self) -> None:
-        """Выводит главное меню."""
         print("\n" + "=" * 50)
         print("  УПРАВЛЕНИЕ СОРЕВНОВАНИЯМИ")
         print("=" * 50)
@@ -61,7 +50,6 @@ class CLI:
         print("-" * 50)
 
     def _add_competition(self) -> None:
-        """Диалог добавления нового соревнования."""
         print("\n--- ДОБАВЛЕНИЕ СОРЕВНОВАНИЯ ---")
         print("Типы: 1 - Командное, 2 - Индивидуальное")
         try:
@@ -78,7 +66,6 @@ class CLI:
                 min_teams = int(input("Мин. команд: "))
                 team_size = int(input("Размер команды: "))
                 comp: Competition = TeamCompetition(name, sport, location, start, end, max_parts, min_teams, team_size)
-                # Регистрируем пару команд для демонстрации
                 comp.register_team("Команда А")
                 comp.register_team("Команда Б")
             else:
@@ -94,14 +81,12 @@ class CLI:
             print(f"✗ Ошибка ввода данных: {e}")
 
     def _show_all(self) -> None:
-        """Выводит таблицу всех соревнований."""
         items = self.app.get_all()
         if not items:
             print("\nКоллекция пуста.")
             return
         
         print("\n--- ВСЕ СОРЕВНОВАНИЯ ---")
-        # Форматированный вывод таблицы
         print(f"{'ID':<10} {'Название':<25} {'Вид спорта':<15} {'Статус':<15} {'Участники':<10}")
         print("-" * 75)
         for comp in items:
@@ -114,7 +99,6 @@ class CLI:
         comp = self.app.find_by_id(comp_id)
         if comp:
             print(f"Найдено: {comp}")
-            # Показываем полную информацию
             if isinstance(comp, TeamCompetition):
                 print(f"  Тип: Командное | Команды: {', '.join(comp.get_teams_list())}")
             elif isinstance(comp, IndividualCompetition):
@@ -123,14 +107,12 @@ class CLI:
             print(f"Соревнование с ID {comp_id} не найдено.")
 
     def _delete_competition(self) -> None:
-        """Удаление соревнования с подтверждением."""
         comp_id = input("Введите ID соревнования для удаления: ")
         comp = self.app.find_by_id(comp_id)
         if not comp:
             print(f"Соревнование с ID {comp_id} не найдено.")
             return
         
-        # Подтверждение опасной операции
         confirm = input(f"Удалить '{comp.name}'? (y/n): ")
         if confirm.lower() == 'y':
             try:
