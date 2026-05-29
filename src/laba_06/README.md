@@ -48,6 +48,3 @@
 - Вызван `score()` у каждого — работает
 - Один класс TypedCollection работает с разными Protocol
 
-# Asciinema:
-
-[![asciinema](https://asciinema.org/a/sCPvta8QZXen7O5h.svg)](https://asciinema.org/a/sCPvta8QZXen7O5h)

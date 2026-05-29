@@ -20,4 +20,3 @@ Lab_06:[Лабораторная работа №6](src/laba_06)
 
 Lab_07:[Лабораторная работа №7](src/laba_07)
 
-[![asciinema](https://asciinema.org/a/v2Kh5cCkZutcS11w.svg)](https://asciinema.org/a/v2Kh5cCkZutcS11w)
