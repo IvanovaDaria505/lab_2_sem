@@ -26,8 +26,6 @@
 # 2. Структура проекта
 
 ```text
-python_labs/
-│
 ├─ laba_07/
 │  │
 │  ├─ README.md
